@@ -1,0 +1,11 @@
+{
+  "name": "com.qubeleyddj.face2anim",
+  "version": "1.0.0",
+  "displayName": "Face2Anim",
+  "description": "Unity Editor 拡張。SkinnedMeshRenderer の現在の BlendShape（シェイプキー）状態を、1 フレームの AnimationClip（.anim）として書き出します。",
+  "unity": "2022.3",
+  "author": {
+    "name": "QubeledyDDJ",
+    "url": "https://qbshop.booth.pm/"
+  }
+}
