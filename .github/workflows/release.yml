@@ -3,8 +3,8 @@ name: VPM Repo Update
 on:
   push:
     branches:
-      - main  # mainにプッシュされたら実行
-  workflow_dispatch: # 手動実行も可能にする
+      - main
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -18,17 +18,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # VPM用のカタログ(index.json)を自動生成/更新するアクション
-      # 複数のツールがあっても自動で検知してくれます
+      # VPM用のカタログ(index.json)を自動生成/更新する
       - name: Update VPM Repo
         uses: vrc-get/vpm-specs-action@v0.1
         with:
-          packages: Packages # パッケージが入っているフォルダを指定
+          # index.jsonを生成するパッケージフォルダの場所
+          packages: Packages
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: . # カタログファイルをPages用にアップロード
+          path: .
 
   deploy:
     needs: build
