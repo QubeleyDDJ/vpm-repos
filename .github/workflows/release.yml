@@ -18,12 +18,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # VPM用のカタログ(index.json)を自動生成/更新する
+      # vrc-getコマンドをインストール
+      - name: Install vrc-get
+        run: |
+          curl -L https://github.com/vrc-get/vrc-get/releases/latest/download/vrc-get-ubuntu-x86_64 -o vrc-get
+          chmod +x vrc-get
+
+      # index.jsonを生成/更新
       - name: Update VPM Repo
-        uses: vrc-get/vpm-specs-action@v0.1
-        with:
-          # index.jsonを生成するパッケージフォルダの場所
-          packages: Packages
+        run: |
+          ./vrc-get vpm repo make . --package Packages
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
