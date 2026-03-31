@@ -2,33 +2,49 @@ name: VPM Repo Update
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 1. 外部アクションを使わず、公式バイナリを直接取得
       - name: Setup vrc-get
         run: |
-          curl -L https://github.com/vrc-get/vrc-get/releases/latest/download/vrc-get-x86_64-unknown-linux-musl -o vrc-get
+          set -e
+          curl -fL https://github.com/vrc-get/vrc-get/releases/latest/download/x86_64-unknown-linux-musl-vrc-get -o vrc-get
           chmod +x vrc-get
+          ./vrc-get --version
 
-      # 2. その場でカタログ(index.json)を作成
       - name: Generate index.json
         run: |
+          set -e
           ./vrc-get vpm repo make . --package Packages
 
-      # 3. 生成物をPages用に保存
+      - name: Verify generated files
+        run: |
+          set -e
+          test -f index.json
+          ls -la
+          echo "index.json generated successfully."
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -40,6 +56,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
