@@ -29,11 +29,12 @@ jobs:
           curl -fL https://github.com/vrc-get/vrc-get/releases/latest/download/x86_64-unknown-linux-musl-vrc-get -o vrc-get
           chmod +x vrc-get
           ./vrc-get --version
+          ./vrc-get --help
 
       - name: Generate index.json
         run: |
           set -e
-          ./vrc-get vpm repo make . --package Packages
+          ./vrc-get repo make . --package Packages
 
       - name: Verify generated files
         run: |
