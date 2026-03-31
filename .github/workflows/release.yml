@@ -17,16 +17,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 信頼性NO.1のVPMリポジトリ生成アクション
-      # ファイル名などを直接指定しなくて良いのでエラーが起きにくいです
-      - name: VPM Repo Update
-        uses: vranas/vpm-repo-action@v0.1.4
-        with:
-          # パッケージが入っているフォルダを指定
-          packages_directory: Packages
-          # 生成されるカタログのベースURL（あなたのPagesのURL）
-          repository_url: https://qubeleyddj.github.io/vpm-repos/
+      # 1. 外部アクションを使わず、公式バイナリを直接取得
+      - name: Setup vrc-get
+        run: |
+          curl -L https://github.com/vrc-get/vrc-get/releases/latest/download/vrc-get-x86_64-unknown-linux-musl -o vrc-get
+          chmod +x vrc-get
 
+      # 2. その場でカタログ(index.json)を作成
+      - name: Generate index.json
+        run: |
+          ./vrc-get vpm repo make . --package Packages
+
+      # 3. 生成物をPages用に保存
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
