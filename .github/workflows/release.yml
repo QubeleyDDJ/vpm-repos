@@ -2,17 +2,13 @@ name: VPM Repo Update
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   workflow_dispatch:
 
 permissions:
   contents: write
   pages: write
   id-token: write
-
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   build:
@@ -21,11 +17,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 信頼性の高いVPMリポジトリ生成アクション
-      - name: Update VPM Repo
-        uses: vup-repo/action@v1
-        with:
-          packages: Packages
+      # vrc-getを直接ダウンロード（リンクを修正し、失敗時にエラーを出すよう厳格化）
+      - name: Install vrc-get
+        run: |
+          curl -fsSL https://github.com/vrc-get/vrc-get/releases/latest/download/vrc-get-x86_64-unknown-linux-musl -o vrc-get
+          chmod +x vrc-get
+
+      # index.jsonの生成
+      - name: Build Repo
+        run: |
+          ./vrc-get vpm repo make . --package Packages
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
