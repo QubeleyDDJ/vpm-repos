@@ -1,0 +1,17 @@
+{
+  "name": "qbshop VPM Repo",
+  "id": "com.qubeleyddj.vpm-repos",
+  "url": "https://QubeleyDDJ.github.io/vpm-repos/index.json",
+  "author": {
+    "name": "QubeleyDDJ",
+    "url": "https://github.com/QubeleyDDJ"
+  },
+  "description": "QubeleyDDJ's VRChat Tool Packages",
+  "infoLink": {
+    "url": "https://github.com/QubeleyDDJ/vpm-repos",
+    "text": "View on GitHub"
+  },
+  "githubRepos": [
+    "QubeleyDDJ/Face2Anim"
+  ]
+}

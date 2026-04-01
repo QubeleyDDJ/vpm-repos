@@ -1,0 +1,40 @@
+name: Build Repo Listing
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Checkout builder
+        uses: actions/checkout@v4
+        with:
+          repository: vrchat-community/package-list-action
+          path: ci
+
+      - name: Build listing
+        run: |
+          ci/build.cmd BuildMultiPackageListing --list-publish-directory Website
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: Website
+
+      - name: Deploy
+        uses: actions/deploy-pages@v4
