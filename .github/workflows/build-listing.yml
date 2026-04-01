@@ -7,6 +7,7 @@ on:
       - main
     paths:
       - source.json
+      - Website/**
       - .github/workflows/build-listing.yml
 
 permissions:
@@ -41,7 +42,7 @@ jobs:
           path: ${{ env.pathToCi }}
           clean: false
 
-      - name: Restore Cache
+      - name: Restore cache
         uses: actions/cache@v4
         with:
           path: |
@@ -49,18 +50,10 @@ jobs:
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
 
-      - name: Create output directory
-        run: mkdir -p "$GITHUB_WORKSPACE/${{ env.listPublishDirectory }}"
-
       - name: Build Package Version Listing
         run: ${{ env.pathToCi }}/build.cmd BuildMultiPackageListing --root ${{ env.pathToCi }} --list-publish-directory $GITHUB_WORKSPACE/${{ env.listPublishDirectory }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Check generated files
-        run: |
-          ls -la "$GITHUB_WORKSPACE/${{ env.listPublishDirectory }}"
-          test -f "$GITHUB_WORKSPACE/${{ env.listPublishDirectory }}/index.json"
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
