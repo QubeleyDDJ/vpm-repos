@@ -26,7 +26,7 @@ jobs:
 
       - name: Build listing
         run: |
-          ci/build.cmd BuildMultiPackageListing --list-publish-directory Website
+          ci/build.cmd BuildMultiPackageListing --root "$GITHUB_WORKSPACE/ci" --list-publish-directory "$GITHUB_WORKSPACE/Website"
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
