@@ -7,6 +7,7 @@ on:
       - main
     paths:
       - source.json
+      - .github/workflows/build-listing.yml
 
 permissions:
   contents: read
@@ -48,10 +49,18 @@ jobs:
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
 
+      - name: Create output directory
+        run: mkdir -p "$GITHUB_WORKSPACE/${{ env.listPublishDirectory }}"
+
       - name: Build Package Version Listing
         run: ${{ env.pathToCi }}/build.cmd BuildMultiPackageListing --root ${{ env.pathToCi }} --list-publish-directory $GITHUB_WORKSPACE/${{ env.listPublishDirectory }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check generated files
+        run: |
+          ls -la "$GITHUB_WORKSPACE/${{ env.listPublishDirectory }}"
+          test -f "$GITHUB_WORKSPACE/${{ env.listPublishDirectory }}/index.json"
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
